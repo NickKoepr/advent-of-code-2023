@@ -12,21 +12,26 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        val cards = input.map { it.toCard() }
+        return cards.sumOf {card ->
+            val x = calcNumOfScratchCards(cards, card)
+            println(x)
+            x
+        }
     }
 
     // test if implementation meets criteria from the description, like:
     val testInput1 = readInput("Day04_test")
     check(part1(testInput1) == 13)
 
-
-//    val testInput2 = readInput("Day04_test")
-//    check(part2(testInput2) == 0)
+    val testInput2 = readInput("Day04_test")
+    println(part2(testInput2))
+    check(part2(testInput2) == 30)
 
     val input1 = readInput("Day04")
     part1(input1).println()
-//    val input2 = readInput("Day04")
-//    part2(input2).println()
+    val input2 = readInput("Day04")
+    part2(input2).println()
 }
 
 data class Card(val id: Int, val cardNumbers: List<Int>, val winningNumbers: List<Int>)
@@ -55,4 +60,19 @@ fun Card.getNumberOfWonPoints(): Int {
 fun calculatePoints(wonNumbers: Int): Int {
     if (wonNumbers <= 1) return wonNumbers
     return (2..wonNumbers).reduce { acc, _ -> acc + acc }
+}
+
+
+fun calcNumOfScratchCards(allCards: List<Card>, selectedCard: Card): Int {
+    val cardId = selectedCard.id
+    val numWonPoints = selectedCard.getNumberOfWonPoints()
+    if (numWonPoints >= 1) {
+//        println( "$cardId: ${cardId + 1..cardId + numWonPoints}")
+        return (cardId + 1..cardId + numWonPoints).sumOf { cardNum ->
+//            println("$cardId $cardNum")
+            calcNumOfScratchCards(allCards, allCards[cardNum - 1])
+        }
+    }
+    println("RUNNED")
+    return 1
 }

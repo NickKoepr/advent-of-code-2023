@@ -13,9 +13,8 @@ fun main() {
 
     fun part2(input: List<String>): Int {
         val cards = input.map { it.toCard() }
-        return cards.sumOf {card ->
+        return cards.sumOf { card ->
             val x = calcNumOfScratchCards(cards, card)
-            println(x)
             x
         }
     }
@@ -25,7 +24,6 @@ fun main() {
     check(part1(testInput1) == 13)
 
     val testInput2 = readInput("Day04_test")
-    println(part2(testInput2))
     check(part2(testInput2) == 30)
 
     val input1 = readInput("Day04")
@@ -66,13 +64,11 @@ fun calculatePoints(wonNumbers: Int): Int {
 fun calcNumOfScratchCards(allCards: List<Card>, selectedCard: Card): Int {
     val cardId = selectedCard.id
     val numWonPoints = selectedCard.getNumberOfWonPoints()
+    var amountOfCards = 0
     if (numWonPoints >= 1) {
-//        println( "$cardId: ${cardId + 1..cardId + numWonPoints}")
-        return (cardId + 1..cardId + numWonPoints).sumOf { cardNum ->
-//            println("$cardId $cardNum")
+        amountOfCards = (cardId + 1..cardId + numWonPoints).sumOf { cardNum ->
             calcNumOfScratchCards(allCards, allCards[cardNum - 1])
         }
     }
-    println("RUNNED")
-    return 1
+    return amountOfCards + 1
 }
